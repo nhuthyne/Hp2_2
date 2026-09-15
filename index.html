@@ -1,5 +1,125 @@
-        // BAO HY XINH DEP TUYET VOI (HỌC PHẦN 2)
-        // Bài: Lãnh thổ & Biên giới
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAO HY XINH DEP TUYET VOI - Học Phần 2 (80 Câu)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            min-height: 100vh; padding: 20px; color: #333; line-height: 1.6;
+        }
+        .container {
+            max-width: 800px; margin: 0 auto;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
+        p.subtitle { text-align: center; color: #555; margin-bottom: 30px; font-weight: 500; }
+        .question-card {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px; border-radius: 12px; margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .question-title { font-weight: 600; font-size: 1.1em; margin-bottom: 15px; color: #1a252f; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option-label {
+            display: flex; align-items: flex-start; padding: 12px 15px;
+            background: rgba(255,255,255,0.6); border-radius: 8px;
+            cursor: pointer; transition: all 0.2s ease; border: 1px solid transparent;
+        }
+        .option-label:hover { background: rgba(255,255,255,0.9); transform: translateX(5px); }
+        .option-label input { margin-top: 5px; margin-right: 12px; cursor: pointer; }
+        .btn-submit {
+            display: block; width: 100%; padding: 15px; margin-top: 30px;
+            background: #6c5ce7; color: white; border: none; border-radius: 12px;
+            font-size: 1.2em; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3); transition: 0.3s;
+        }
+        .btn-submit:hover { background: #5a4bcf; transform: translateY(-2px); }
+        .result-panel {
+            display: none; margin-top: 20px; padding: 20px; text-align: center;
+            background: #fff; border-radius: 12px; font-size: 1.3em; font-weight: bold; color: #d63031;
+        }
+        .correct-ans { background: #d4edda !important; border-color: #c3e6cb !important; color: #155724; font-weight: bold;}
+        .wrong-ans { background: #f8d7da !important; border-color: #f5c6cb !important; color: #721c24; text-decoration: line-through;}
+        input:disabled { cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ôn Tập GDQP - Học Phần 2</h1>
+    <p class="subtitle">Bộ 80 Câu Hỏi Trắc Nghiệm Đảo Ngẫu Nhiên</p>
+    <div id="quiz-container"></div>
+    <button class="btn-submit" onclick="checkAnswers()">Nộp Bài & Xem Kết Quả</button>
+    <div id="result" class="result-panel"></div>
+</div>
+
+<script>
+    // Toàn bộ 80 câu hỏi từ Học phần 2
+    const quizData = [
+        // 50 CÂU CŨ
+        {q: "Chiến lược diễn biến hòa bình được tiến hành bằng:", opts: ["A. Biện pháp phi quân sự", "B. Biện pháp quân sự", "C. Biện pháp kinh tế", "D. Biện pháp vũ trang"], ans: 0},
+        {q: "Chiến lược cơ bản nhằm lật đổ chế độ chính trị của các nước tiến bộ từ bên trong bằng biện pháp phi quân sự được hiểu là:", opts: ["A. Khái niệm chiến lược DBHB", "B. Thủ đoạn chiến lược DBHB", "C. Mục đích chiến lược DBHB", "D. Âm mưu chiến lược DBHB"], ans: 0},
+        {q: "Ngày 11/7/1995, Mỹ tuyên bố nội dung gì với Việt Nam?", opts: ["A. Xóa bỏ cấm vận kinh tế", "B. Xóa bỏ cấm vận quân sự", "C. Bình thường hóa quan hệ ngoại giao", "D. Xóa bỏ cấm vận vũ khí sát thương"], ans: 2},
+        {q: "Tháng 12/1957, Tổng thống Aixenhao tuyên bố nội dung gì trong chiến lược diễn biến hòa bình?", opts: ["A. Mỹ sẽ giành thắng lợi bằng hòa bình", "B. Mỹ phát triển mạnh về KHKT", "C. Mỹ làm bá chủ thế giới", "D. Mỹ cho người lên mặt trăng"], ans: 0},
+        {q: "Xóa bỏ vai trò lãnh đạo của Đảng, xóa bỏ chế độ XHCN... được xác định là:", opts: ["A. Mục tiêu nhất quán của chiến lược DBHB", "B. Biện pháp nhất quán của chiến lược DBHB", "C. Thủ đoạn nhất quán của chiến lược DBHB", "D. Nhiệm vụ nhất quán của chiến lược DBHB"], ans: 0},
+        {q: "Khích lệ thành phần kinh tế tư nhân phát triển, từng bước làm mất vai trò chủ đạo của kinh tế Nhà nước, là thủ đoạn chống phá về:", opts: ["A. Kinh tế", "B. Chính trị", "C. Dân tộc", "D. Tôn giáo"], ans: 0},
+        {q: "Xóa bỏ chủ nghĩa Mác - Lênin, tư tưởng Hồ Chí Minh là thủ đoạn chống phá về:", opts: ["A. Chính trị - kinh tế", "B. Tư tưởng - văn hóa", "C. Dân tộc - tôn giáo", "D. Quốc phòng - an ninh"], ans: 1},
+        {q: "Khái niệm bạo loạn lật đổ là hành động chống phá bằng bạo lực có tổ chức nhằm:", opts: ["A. Gây rối loạn an ninh chính trị, lật đổ chính quyền", "B. Tiến hành diễn biến hòa bình", "C. Gây rối trật tự công cộng", "D. Kích động biểu tình"], ans: 0},
+        {q: "Cộng đồng người ổn định, hình thành trong lịch sử tạo lập một quốc gia trên cơ sở cộng đồng bền vững về lãnh thổ, kinh tế, ngôn ngữ... là:", opts: ["A. Khái niệm dân tộc", "B. Đặc điểm dân tộc", "C. Nguồn gốc dân tộc", "D. Tính chất dân tộc"], ans: 0},
+        {q: "Quan điểm 'Các dân tộc hoàn toàn bình đẳng... đều có quyền lợi và nghĩa vụ ngang nhau' là của:", opts: ["A. V.I. Lênin", "B. C. Mác", "C. Ph. Ăngghen", "D. Hồ Chí Minh"], ans: 0},
+        {q: "Đặc trưng cư trú của các dân tộc thiểu số ở Việt Nam là:", opts: ["A. Tập trung ở nông thôn", "B. Phân tán và xen kẽ trên địa bàn rộng lớn, chủ yếu miền núi", "C. Tập trung trên địa bàn hẹp", "D. Chủ yếu ở đồng bằng"], ans: 1},
+        {q: "Một hình thái ý thức xã hội phản ánh hiện thực khách quan theo quan niệm hoang đường ảo tưởng... là:", opts: ["A. Khái niệm tôn giáo theo chủ nghĩa Mác-Lênin", "B. Nguồn gốc tôn giáo", "C. Tính chất tôn giáo", "D. Đặc điểm tôn giáo"], ans: 0},
+        {q: "Nguồn gốc của tôn giáo bao gồm:", opts: ["A. Kinh tế xã hội; nhận thức, tâm lý", "B. Kinh tế xã hội; văn hóa; quân sự", "C. Kinh tế xã hội; lịch sử, tâm lý", "D. Nhận thức, tâm lý, lịch sử"], ans: 0},
+        {q: "Việt Nam hiện nay có mấy tôn giáo lớn? Tôn giáo nào là nội sinh?", opts: ["A. 6: Phật giáo và Hòa Hảo", "B. 6: Cao Đài và Hòa Hảo", "C. 6: Phật giáo và Hồi giáo", "D. 6: Công giáo và Cao Đài"], ans: 1},
+        {q: "Mọi người có quyền tự do tín ngưỡng, tôn giáo... Các tôn giáo bình đẳng trước pháp luật. Quy định tại:", opts: ["A. Khoản 1, Điều 24 Hiến pháp 2013", "B. Khoản 1, Điều 25 Hiến pháp 2013", "C. Khoản 1, Điều 26 Hiến pháp 2013", "D. Khoản 1, Điều 27 Hiến pháp 2013"], ans: 0},
+        {q: "Khái niệm 'Môi trường bao gồm các yếu tố vật chất tự nhiên và nhân tạo quan hệ mật thiết với nhau...' được xác định trong:", opts: ["A. Luật BVMT 2014", "B. Luật BVMT 2018", "C. Luật BVMT 2020", "D. Luật BVMT 2022"], ans: 2},
+        {q: "Tại Điều 43, Hiến pháp năm 2013 quy định:", opts: ["A. Mọi người có quyền được sống trong MT trong lành và có nghĩa vụ BVMT", "B. Mọi người có quyền được sống ổn định", "C. BVMT là sự nghiệp của toàn dân", "D. Mọi người có quyền mưu cầu hạnh phúc"], ans: 0},
+        {q: "Bảo vệ môi trường là quyền, nghĩa vụ và trách nhiệm của mọi cơ quan, tổ chức, cộng đồng dân cư... Quy định tại:", opts: ["A. Khoản 1, Điều 4 Luật BVMT 2020", "B. Khoản 1, Điều 5 Luật BVMT 2020", "C. Khoản 1, Điều 6 Luật BVMT 2020", "D. Khoản 1, Điều 3 Luật BVMT 2020"], ans: 0},
+        {q: "Môi trường cung cấp tài nguyên thiên nhiên cần thiết cho cuộc sống, được xác định là:", opts: ["A. Khái niệm môi trường", "B. Nội dung môi trường", "C. Vai trò của môi trường", "D. Biện pháp BVMT"], ans: 2},
+        {q: "Theo Luật BVMT 2020, khái niệm 'ứng phó với BĐKH' là các hoạt động của con người nhằm:", opts: ["A. Thích ứng với BĐKH", "B. Hạn chế tác động xấu", "C. Giảm thiểu BĐKH", "D. Thích ứng với BĐKH và giảm nhẹ phát thải khí nhà kính"], ans: 3},
+        {q: "Các hành vi chôn, lấp, đổ, xả thải trái pháp luật các chất thải ra môi trường được xác định là:", opts: ["A. Hành vi hủy hoại MT", "B. Hành vi gây ô nhiễm MT", "C. Gây cạn kiệt MT", "D. Hủy hoại tài nguyên"], ans: 1},
+        {q: "Xây dựng đội tình nguyện môi trường, thu gom chất thải là trách nhiệm của:", opts: ["A. Nhà trường", "B. Sinh viên", "C. Giảng viên", "D. Lực lượng chuyên trách"], ans: 1},
+        {q: "Hệ thống văn bản pháp luật điều chỉnh quan hệ xã hội trong lĩnh vực bảo đảm TTATGT là:", opts: ["A. Pháp luật bảo đảm TTATGT", "B. Vi phạm pháp luật ATGT", "C. Phòng ngừa vi phạm ATGT", "D. Đấu tranh chống vi phạm ATGT"], ans: 0},
+        {q: "Hoạt động hướng đến triệt tiêu nguyên nhân, điều kiện vi phạm pháp luật TTATGT là:", opts: ["A. Pháp luật ATGT", "B. Phòng ngừa vi phạm TTATGT", "C. Xử lý vi phạm", "D. Quản lý nhà nước về ATGT"], ans: 1},
+        {q: "Hành vi vi phạm quy định về TTATGT mà không phải là tội phạm được gọi là:", opts: ["A. Vi phạm hình sự", "B. Vi phạm hành chính", "C. Nguyên nhân vi phạm", "D. Dấu hiệu vi phạm"], ans: 1},
+        {q: "Trong đô thị, trường hợp nào không được dùng còi (trừ xe ưu tiên)?", opts: ["A. Qua nơi đông người", "B. Qua trường học", "C. Từ 22h đến 5h sáng hôm sau", "D. Qua ngã tư"], ans: 2},
+        {q: "Người điều khiển xe máy sử dụng điện thoại bị phạt (NĐ 100/2019):", opts: ["A. 600.000đ - 1.000.000đ", "B. 1.000.000đ - 2.000.000đ", "C. 2.000.000đ - 3.000.000đ", "D. 3.000.000đ - 4.000.000đ"], ans: 0},
+        {q: "Điều khiển xe máy khi nồng độ cồn vượt quá 80mg/100ml máu hoặc 0,4mg/1 lít khí thở bị phạt (NĐ 100/2019):", opts: ["A. 6.000.000đ - 8.000.000đ", "B. 4.000.000đ - 6.000.000đ", "C. 2.000.000đ - 3.000.000đ", "D. 8.000.000đ - 10.000.000đ"], ans: 0},
+        {q: "Tuyên truyền, giáo dục pháp luật nâng cao ý thức chấp hành ATGT là một trong những:", opts: ["A. Biện pháp phòng, chống vi phạm", "B. Đặc điểm phòng, chống", "C. Nội dung xử phạt", "D. Khái niệm ATGT"], ans: 0},
+        {q: "Những yếu tố tinh thần, phẩm giá, sự tôn trọng của dư luận, xã hội đối với một người là:", opts: ["A. Danh dự của con người", "B. Nhân phẩm của con người", "C. Uy tín cá nhân", "D. Đạo đức"], ans: 0},
+        {q: "Tổng hợp những phẩm chất mang tính đặc trưng của mỗi cá nhân tạo nên giá trị con người là:", opts: ["A. Danh dự của con người", "B. Nhân phẩm của con người", "C. Quyền con người", "D. Lòng tự trọng"], ans: 1},
+        {q: "Mọi người có quyền bất khả xâm phạm về thân thể... không bị tra tấn, bạo lực... Quy định tại Hiến pháp 2013:", opts: ["A. Khoản 1, Điều 21", "B. Khoản 3, Điều 20", "C. Khoản 2, Điều 20", "D. Khoản 1, Điều 20"], ans: 3},
+        {q: "Các tội hiếp dâm, dâm ô với người dưới 16 tuổi được xếp vào nhóm:", opts: ["A. Tội xâm phạm tình dục", "B. Tội mua bán người", "C. Tội làm nhục người khác", "D. Tội bạo lực gia đình"], ans: 0},
+        {q: "Chửi thề, nói xấu, lột quần áo quay clip đưa lên mạng là hình thức:", opts: ["A. Gây rối trật tự", "B. Xâm hại danh dự, nhân phẩm", "C. Khủng bố mạng", "D. Bạo hành"], ans: 1},
+        {q: "Giao cấu với người từ đủ 13 đến dưới 16 tuổi trái ý muốn (Khoản 1, Điều 142 BLHS) bị phạt tù:", opts: ["A. 5 - 10 năm", "B. 7 - 15 năm", "C. 10 - 15 năm", "D. 15 - 20 năm"], ans: 1},
+        {q: "Khi có hành vi xâm phạm danh dự, nhân phẩm trong trường học, sinh viên cần làm gì?", opts: ["A. Gọi người thân đến hành hung", "B. Xử lý nội bộ", "C. Đăng tải lên mạng xã hội", "D. Kịp thời cung cấp thông tin cho cơ quan chức năng"], ans: 3},
+        {q: "An ninh mạng là sự bảo đảm hoạt động trên không gian mạng:", opts: ["A. Không gây phương hại an ninh quốc gia, TTATXH, lợi ích hợp pháp...", "B. Xuyên quốc gia, không giới hạn", "C. Có mã hóa an toàn", "D. Hoàn toàn ẩn danh"], ans: 0},
+        {q: "Tội phạm mạng là hành vi sử dụng không gian mạng, CNTT... để thực hiện tội phạm:", opts: ["A. Để trục lợi", "B. Được quy định tại Bộ luật hình sự", "C. Xâm phạm đời tư", "D. Quy định tại Bộ luật dân sự"], ans: 1},
+        {q: "Tấn công mạng là hành vi sử dụng không gian mạng... để:", opts: ["A. Phá hoại gây gián đoạn hoạt động của mạng viễn thông, máy tính...", "B. Trích xuất dữ liệu", "C. Tăng băng thông", "D. Nâng cấp hệ thống"], ans: 0},
+        {q: "Hành vi nào sau đây bị nghiêm cấm về an ninh mạng?", opts: ["A. Tổ chức cấu kết, xúi giục, lừa gạt chống nhà nước CHXHCN Việt Nam", "B. Hợp tác quốc tế về an ninh", "C. Đào tạo nhân lực an ninh mạng", "D. Phòng thủ mạng"], ans: 0},
+        {q: "Xuyên tạc lịch sử, phủ nhận thành tựu cách mạng trên không gian mạng là:", opts: ["A. Hành vi bị pháp luật nghiêm cấm", "B. Quyền tự do ngôn luận", "C. Hoạt động bình thường", "D. Biện pháp kỹ thuật"], ans: 0},
+        {q: "Đặc điểm của an toàn thông tin (CIA Triad) là:", opts: ["A. Tính bí mật, tính toàn vẹn", "B. Tính toàn vẹn, tính sẵn sàng", "C. Tính toàn vẹn, tính tiện ích", "D. Tính bí mật, tính toàn vẹn, tính sẵn sàng"], ans: 3},
+        {q: "Khủng bố mạng là việc sử dụng không gian mạng, CNTT để:", opts: ["A. Xuyên tạc lịch sử", "B. Thực hiện hành vi khủng bố, tài trợ khủng bố", "C. Xâm phạm bí mật nhà nước", "D. Cạnh tranh thương mại"], ans: 1},
+        {q: "An ninh phi truyền thống bao gồm nhiều lĩnh vực liên quan an ninh quốc gia và:", opts: ["A. Khó đối phó hay giải quyết đơn phương bằng biện pháp quân sự", "B. Dễ đối phó bằng biện pháp quân sự", "C. Giải quyết bằng vũ trang", "D. Không đe dọa quốc phòng"], ans: 0},
+        {q: "Sự an toàn của trạng thái hệ thống môi trường lành mạnh, đáp ứng điều kiện sống, đảm bảo phát triển quốc gia là:", opts: ["A. An ninh môi trường", "B. An ninh sinh thái", "C. An ninh tài nguyên", "D. An ninh xã hội"], ans: 0},
+        {q: "Tác động của an ninh phi truyền thống đối với chính trị - xã hội là:", opts: ["A. Gây bất ổn xã hội, phá vỡ khối đại đoàn kết dân tộc", "B. Kìm hãm kinh tế", "C. Cạn kiệt tài nguyên", "D. Suy giảm quân sự"], ans: 0},
+        {q: "An ninh phi truyền thống theo quan niệm của Liên hợp quốc gồm các lĩnh vực:", opts: ["A. Kinh tế, lương thực, sức khỏe, môi trường, con người, xã hội, chính trị", "B. Quân sự, ngoại giao, biên giới", "C. Khủng bố, bạo loạn", "D. Tội phạm, dịch bệnh"], ans: 0},
+        {q: "Đặc trưng của chủ nghĩa khủng bố quốc tế là:", opts: ["A. Tính dân tộc", "B. Tính cách mạng", "C. Tính lãnh đạo", "D. Tính chủ thể phi quốc gia"], ans: 3},
+        {q: "Bản chất của an ninh phi truyền thống là:", opts: ["A. Quân sự là chủ yếu", "B. Phi quân sự, xuyên quốc gia", "C. Chạy đua vũ trang", "D. Xung đột lãnh thổ"], ans: 1},
+        {q: "Đại dịch Covid-19 là vấn đề an ninh phi truyền thống ở quy mô nào?", opts: ["A. Khu vực", "B. Châu lục", "C. Toàn cầu", "D. Quốc gia"], ans: 2},
+        {q: "Giải quyết các nội dung an ninh phi truyền thống là nhiệm vụ của:", opts: ["A. Các nước phát triển", "B. Toàn thế giới", "C. Các nước đang phát triển", "D. Liên hợp quốc"], ans: 1},
+
+        // 30 CÂU MỚI BỔ SUNG
         {q: "Lãnh thổ quốc gia Việt Nam bao gồm:", opts: ["A. Vùng đất, vùng biển, vùng trời ngoài ra còn có lãnh thổ quốc gia đặc biệt", "B. Vùng đất, vùng biển, vùng trời", "C. Vùng đất và vùng biển", "D. Biên giới và đất liền"], ans: 0},
         {q: "Biển Việt Nam có mấy vùng?", opts: ["A. Có 3 vùng", "B. Có 4 vùng", "C. Có 5 vùng", "D. Có 6 vùng"], ans: 2},
         {q: "Nội thủy là gì?", opts: ["A. Vùng biển tiếp giáp với lãnh hải", "B. Vùng biển nằm ở phía trong đường cơ sở", "C. Vùng đặc quyền kinh tế", "D. Vùng biển nằm ngoài đường cơ sở"], ans: 1},
@@ -9,38 +129,106 @@
         {q: "Huyện đảo Hoàng Sa, Trường Sa thuộc tỉnh, thành phố nào của Việt Nam?", opts: ["A. Đà Nẵng, Khánh Hòa", "B. Quảng Nam, Khánh Hòa", "C. Quảng Ngãi, Phú Yên", "D. Đà Nẵng, Quảng Nam"], ans: 0},
         {q: "Lãnh thổ Việt Nam có mấy hướng trông ra biển?", opts: ["A. 2 hướng", "B. 3 hướng: Đông, Nam và Tây Nam", "C. 4 hướng", "D. 1 hướng"], ans: 1},
         {q: "Hiện nay ở nước ta có bao nhiêu tỉnh, thành phố có biển?", opts: ["A. 28 tỉnh, thành phố", "B. 32 tỉnh, thành phố", "C. 29 tỉnh, thành phố", "D. 27 tỉnh, thành phố"], ans: 0},
-        
-        // Bài: Không gian mạng
         {q: "Thông tin sai sự thật gây hoang mang trong nhân dân, gây thiệt hại cho hoạt động kinh tế - xã hội... được xác định là:", opts: ["A. Hành vi bị nghiêm cấm vi phạm pháp luật trên không gian mạng", "B. Hành vi không bị nghiêm cấm", "C. Hoạt động được khuyến khích", "D. Quyền tự do ngôn luận"], ans: 0},
         {q: "Bảo vệ an ninh mạng là:", opts: ["A. Phòng ngừa, phát hiện, ngăn chặn, xử lý hành vi xâm phạm an ninh mạng", "B. Phát hiện, ngăn chặn, đấu tranh, xử lý", "C. Dò tìm, cảnh báo, đấu tranh", "D. Sử dụng biện pháp nghiệp vụ"], ans: 0},
         {q: "Tuyên truyền, phổ biến giáo dục các quy định của pháp luật về quản lý không gian mạng. Được hiểu là một trong những:", opts: ["A. Biện pháp phòng, chống vi phạm pháp luật trên không gian mạng", "B. Hành vi bị nghiêm cấm", "C. Nội dung phòng chống", "D. Đặc điểm an toàn"], ans: 0},
-        
-        // Bài: Diễn biến hòa bình
         {q: "Ai là người khởi xướng chiến lược diễn biến hòa bình của chủ nghĩa đế quốc?", opts: ["A. Kennan", "B. Mác San", "C. Truman", "D. Aixenhao"], ans: 0},
         {q: "Lợi dụng xu thế hợp tác để du nhập những sản phẩm văn hóa đồi trụy, lối sống phương Tây... là thủ đoạn trên lĩnh vực:", opts: ["A. Chính trị", "B. Tư tưởng - văn hóa", "C. Tôn giáo - dân tộc", "D. Quốc phòng - an ninh"], ans: 1},
         {q: "“Chống phá chính trị làm hàng đầu, kinh tế là mũi nhọn, ngoại giao làm hậu thuẫn, dân tộc, tôn giáo làm ngòi nổ”. Được xác định là:", opts: ["A. Thủ đoạn chống phá của chiến lược diễn biến hòa bình", "B. Quan điểm chống phá", "C. Nội dung chống phá", "D. Đặc điểm chống phá"], ans: 0},
         {q: "Xây dựng ý thức bảo vệ Tổ quốc cho toàn dân. Được xác định là một trong những:", opts: ["A. Giải pháp phòng chống chiến lược diễn biến hòa bình, bạo loạn lật đổ", "B. Nhiệm vụ phòng chống", "C. Phương châm phòng chống", "D. Quan điểm phòng chống"], ans: 0},
-        
-        // Bài: Danh dự nhân phẩm
         {q: "Sự coi trọng của dư luận xã hội, dựa trên giá trị tinh thần, đạo đức tốt đẹp và tỏ rõ sự kính trọng... được hiểu là:", opts: ["A. Danh dự của con người", "B. Nhân phẩm của con người", "C. Danh dự, nhân phẩm", "D. Giá trị cụ thể"], ans: 0},
         {q: "Làm nảy sinh mâu thuẫn giữa cha mẹ và con cái, vợ chồng nảy sinh mâu thuẫn... là:", opts: ["A. Đặc điểm tội xâm phạm đối với cơ quan", "B. Đặc điểm tội xâm phạm danh dự, nhân phẩm đối với gia đình", "C. Đặc điểm tội xâm phạm đối với nhà trường", "D. Đặc điểm tội xâm phạm đối với xã hội"], ans: 1},
         {q: "Làm cho người khác bị xúc phạm, tổn thương về tinh thần và xấu hổ đối với những người xung quanh... Được xác định là:", opts: ["A. Hành vi xâm phạm danh dự, nhân phẩm", "B. Phạm tội xâm phạm", "C. Tội cố ý làm nhục người khác", "D. Tội hành hung"], ans: 0},
-        
-        // Bài: An toàn giao thông
         {q: "Ý chí của Nhà nước để chỉ đạo và tổ chức thực hiện về bảo đảm trật tự an toàn giao thông. Được xác định là một trong những:", opts: ["A. Khái niệm", "B. Nội dung", "C. Vai trò", "D. Đặc điểm của pháp luật về bảo đảm TTATGT"], ans: 3},
         {q: "Các loại văn bản quy phạm pháp luật về bảo đảm trật tự, an toàn giao thông do cơ quan nào ban hành?", opts: ["A. Quốc hội, Chính phủ, các Bộ, cơ quan hành chính từ Trung ương đến địa phương", "B. Chỉ do Chính phủ ban hành", "C. Chỉ do Bộ Giao thông vận tải ban hành", "D. Chỉ do Bộ Công an ban hành"], ans: 0},
-        
-        // Bài: Môi trường
         {q: "Một số cơ quan nhà nước có thẩm quyền ban hành nhiều chính sách ưu đãi để phát triển kinh tế mà chưa quan tâm đúng mức đến bảo vệ môi trường... là:", opts: ["A. Nguyên nhân, điều kiện khách quan", "B. Nguyên nhân, điều kiện chủ quan", "C. Nguyên nhân, điều kiện khách thể", "D. Nguyên nhân, điều kiện chủ thể"], ans: 1},
         {q: "Pháp luật xây dựng hệ thống các quy chuẩn môi trường, tiêu chuẩn môi trường để bảo vệ môi trường. Được xác định là một trong những:", opts: ["A. Vai trò của pháp luật trong công tác bảo vệ môi trường", "B. Nội dung pháp luật", "C. Đặc điểm pháp luật", "D. Tính chất của pháp luật"], ans: 0},
         {q: "Tiến hành các hoạt động điều tra, xử lí vi phạm pháp luật về bảo vệ môi trường. Được xác định là một trong những:", opts: ["A. Khái niệm", "B. Nội dung", "C. Biện pháp phòng, chống vi phạm pháp luật về bảo vệ môi trường", "D. Phương hướng"], ans: 2},
-        
-        // Bài: An ninh phi truyền thống
         {q: "Các vấn đề an ninh phi truyền thống ảnh hưởng và hủy hoại an ninh quốc gia dần dần và...", opts: ["A. Chậm hơn so với an ninh truyền thống", "B. Tiêu cực hơn so với an ninh truyền thống", "C. Rộng hơn so với an ninh truyền thống", "D. Lâu dài hơn so với các vấn đề an ninh truyền thống"], ans: 3},
         {q: "Đối tượng bị đe dọa, xâm phạm của an ninh phi truyền thống là:", opts: ["A. Sự tồn tại, phát triển bền vững của con người, xã hội, môi trường sống", "B. Chủ quyền biển đảo, biên giới lãnh thổ", "C. Độc lập chủ quyền thống nhất toàn vẹn lãnh thổ quốc gia", "D. Chủ quyền lãnh thổ quốc gia, dân tộc"], ans: 0},
-        
-        // Bài: Dân tộc - Tôn giáo
         {q: "Một trong những đặc trưng của các dân tộc Việt Nam là:", opts: ["A. Có truyền thống đoàn kết gắn bó xây dựng quốc gia dân tộc thống nhất", "B. Có quy mô dân số và trình độ phát triển cao", "C. Có trình độ văn hóa phát triển kém bền vững", "D. Các dân tộc có dân số và trình độ phát triển đồng đều"], ans: 0},
         {q: "Giải quyết vấn đề dân tộc: Các dân tộc hoàn toàn bình đẳng; các dân tộc được quyền tự quyết và liên hiệp công nhân tất cả các dân tộc. Là quan điểm của:", opts: ["A. V.I. Lênin", "B. C. Mác", "C. Ph. Ăngghen", "D. Hồ Chí Minh"], ans: 0},
         {q: "Ai là người khẳng định: “Tôn giáo là tiếng thở dài của chúng sinh bị áp bức... là thuốc phiện của nhân dân”?", opts: ["A. Ph. Ăngghen", "B. V.I. Lênin", "C. C. Mác", "D. Hồ Chí Minh"], ans: 2},
         {q: "“Tình hình tôn giáo ổn định; đa số chức sắc, chức việc... tin tưởng vào sự lãnh đạo của Đảng...”. Được xác định là những:", opts: ["A. Thành tựu về vấn đề tôn giáo", "B. Hạn chế về vấn đề tôn giáo", "C. Nguyên nhân về vấn đề tôn giáo", "D. Phương hướng về vấn đề tôn giáo"], ans: 0}
+    ];
+
+    // Thuật toán xáo trộn (Fisher-Yates Shuffle)
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // 1. Xáo trộn ngẫu nhiên vị trí các câu hỏi
+    shuffle(quizData);
+
+    // 2. Xáo trộn ngẫu nhiên các đáp án bên trong mỗi câu
+    quizData.forEach(item => {
+        let correctText = item.opts[item.ans];
+        shuffle(item.opts);
+        item.ans = item.opts.indexOf(correctText);
+    });
+
+    const container = document.getElementById('quiz-container');
+    
+    // Render câu hỏi ra giao diện
+    quizData.forEach((item, index) => {
+        let optionsHTML = '';
+        item.opts.forEach((opt, oIndex) => {
+            // Cắt bỏ ký tự đánh dấu A, B, C, D cứng từ chuỗi gốc và đặt lại theo thứ tự mới
+            let cleanOpt = opt.replace(/^[A-D]\.\s*/, '');
+            let newPrefix = String.fromCharCode(65 + oIndex); 
+            
+            optionsHTML += `
+                <label class="option-label" id="label-${index}-${oIndex}">
+                    <input type="radio" name="q${index}" value="${oIndex}">
+                    ${newPrefix}. ${cleanOpt}
+                </label>
+            `;
+        });
+
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `
+            <div class="question-title">Câu ${index + 1}: ${item.q}</div>
+            <div class="options">${optionsHTML}</div>
+        `;
+        container.appendChild(card);
+    });
+
+    // Xử lý nộp bài
+    function checkAnswers() {
+        let score = 0;
+        quizData.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const correctIndex = item.ans;
+            
+            // Khóa lựa chọn sau khi nộp
+            document.querySelectorAll(`input[name="q${index}"]`).forEach(input => input.disabled = true);
+
+            for(let i=0; i < item.opts.length; i++) {
+                document.getElementById(`label-${index}-${i}`).classList.remove('correct-ans', 'wrong-ans');
+            }
+
+            // Hiển thị kết quả đúng
+            document.getElementById(`label-${index}-${correctIndex}`).classList.add('correct-ans');
+
+            if (selected) {
+                const userIndex = parseInt(selected.value);
+                if (userIndex === correctIndex) {
+                    score++;
+                } else {
+                    document.getElementById(`label-${index}-${userIndex}`).classList.add('wrong-ans');
+                }
+            }
+        });
+
+        const resDiv = document.getElementById('result');
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `Cậu chủ đã trả lời đúng ${score} / ${quizData.length} câu!`;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
